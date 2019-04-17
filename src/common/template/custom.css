@@ -1,0 +1,18 @@
+button {
+    margin-left: 3px;
+}
+
+.table-actions {
+    width: 100px;
+}
+
+.block{
+    width: 600px;
+    height: 100px;
+}
+
+.fundo{
+    background-color: grey;
+    width: 1920px;
+    height: 1080px;
+}

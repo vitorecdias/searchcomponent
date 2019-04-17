@@ -1,0 +1,23 @@
+.main-footer {
+    position: fixed;
+    bottom:0px;
+    width:100%;
+}
+
+button {
+    margin-left: 5px;
+}
+
+.table-actions {
+    width: 150px;
+}
+
+.component{
+    width: 700px;
+    height: 100px;
+}
+.fundo{
+    background-color: azure;
+    width: 1920px;
+    height: 1000px;
+}

@@ -1,26 +1,90 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+
+import AdressForm from './forms/adressForm/adressForm'
+import {
+   Box,
+   Grommet,
+   Tabs,
+   Tab
+  } from 'grommet';
+
+import { deepFreeze } from "grommet/utils"
+import NeighborForm from './forms/neighborForm/neighborForm';
+import CEPForm from './forms/cepForm/cepForm'
+import IptuForm from './forms/iptuForm/iptuForm'
+import LoteCPForm from './forms/loteCPForm/loteCPForm'
+
+const theme = deepFreeze(
+  {
+  "global": {
+    "colors": {
+      "brand": "#0096D6",
+      "control": {
+        "dark": "#00A8F0",
+        "light": "#0096D6"
+      },
+      "focus": "#99d5ef",
+      "accent-1": "#E6734B",
+      "accent-2": "#E6C84B",
+      "accent-3": "#915591",
+      "dark-1": "#000001",
+      "dark-2": "#676767",
+      "light-1": "#F2F2F2",
+      "light-2": "#E8E8E8",
+      "light-3": "#CCCCCC",
+      "neutral-1": "#006996",
+      "neutral-2": "#A65336",
+      "neutral-3": "#A69136",
+      "neutral-4": "#774677",
+      "status-critical": "#F04B37",
+      "status-warning": "#F0AA3C",
+      "status-ok": "#509137",
+      "status-unknown": "#848484",
+      "status-disabled": "#848484"
+    }
+  },
+  "anchor": {
+    "color": {
+      "dark": "#00A8F0",
+      "light": "#2883d7"
+    }
+  }
+}
+)
 
 class App extends Component {
-  render() {
+
+  render() {    
+    
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+   
+        <Grommet theme={theme}>  
+          
+           <Box background="light-1" pad="medium" round="small" height="150px" width="600px" alignSelf="center" align="center" alignContent="stretch"> 
+            <Tabs plain={false}>
+                <Tab title="Endereço" >
+                    <AdressForm />
+                </Tab>
+                <Tab title="Bairro">
+                    <NeighborForm />
+                </Tab>
+                <Tab title="CEP">
+                    <CEPForm />
+                </Tab>
+                <Tab title="IPTU">
+                    <IptuForm />
+                </Tab>
+                <Tab title="Lote CP">
+                    <LoteCPForm />
+                </Tab>
+                <Tab title="Filtro">
+                    <Box pad="medium">Two</Box>
+                </Tab>
+            </Tabs>  
+            </Box>  
+
+        </Grommet>         
+      
     );
   }
 }
