@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import AdressForm from './forms/adressForm/adressForm'
 import {
    Box,
    Grommet,
@@ -13,6 +12,8 @@ import NeighborForm from './forms/neighborForm/neighborForm';
 import CEPForm from './forms/cepForm/cepForm'
 import IptuForm from './forms/iptuForm/iptuForm'
 import LoteCPForm from './forms/loteCPForm/loteCPForm'
+import AdressForm from './forms/adressForm/adressForm'
+import FilterForm from './forms/filterForm/filterForm'
 
 const theme = deepFreeze(
   {
@@ -58,10 +59,9 @@ class App extends Component {
     
     return (
    
-        <Grommet theme={theme}>  
-          
-           <Box background="light-1" pad="medium" round="small" height="150px" width="600px" alignSelf="center" align="center" alignContent="stretch"> 
-            <Tabs plain={false}>
+        <Grommet theme={theme}>            
+           <Box background="light-1" pad="medium" round="small" height="250px" width="600px" alignSelf="center" align="center" alignContent="stretch"> 
+            <Tabs plain={false} alignContent="stretch" align="center">
                 <Tab title="Endereço" >
                     <AdressForm />
                 </Tab>
@@ -78,11 +78,10 @@ class App extends Component {
                     <LoteCPForm />
                 </Tab>
                 <Tab title="Filtro">
-                    <Box pad="medium">Two</Box>
+                    <FilterForm />
                 </Tab>
             </Tabs>  
             </Box>  
-
         </Grommet>         
       
     );

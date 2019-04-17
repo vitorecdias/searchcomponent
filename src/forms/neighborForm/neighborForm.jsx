@@ -59,7 +59,7 @@ class NeighborForm extends Component{
         return(               
             <Form > 
                 <Box direction="row" align="center" alignContent="center" alignSelf="center">                             
-                    <Box pad="small" width="400px" align="center">
+                    <Box pad="small" width="250px" align="center">
                         <FormField component={NewSelect} options={this.props.bairrosList} onChange={this.onSelectBairro} value={this.state.valueBairro} size='xsmall'/> 
                     </Box>
                     <Box pad="small" width="60px">

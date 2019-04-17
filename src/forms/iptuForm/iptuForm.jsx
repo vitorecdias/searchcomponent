@@ -52,7 +52,7 @@ class IptuForm extends Component{
         return(               
             <Form>
                 <Box direction="row" align="center" alignContent="center" alignSelf="center">                             
-                    <Box pad="small" width="400px" align="center">
+                    <Box pad="small" width="200px" align="center">
                         <MaskedInput size="xsmall"
                             mask={[
                                 {
@@ -107,7 +107,7 @@ class IptuForm extends Component{
                             }}}/>
                     </Box>                    
                 </Box>    
-                </Form>    
+            </Form>    
             
         )
     }

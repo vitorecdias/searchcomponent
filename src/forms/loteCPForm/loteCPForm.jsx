@@ -5,11 +5,9 @@ import axios from 'axios'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Form, FormField, Button, Box } from 'grommet'
-import NewSelect from '../../common/template/select'
 import { Search } from 'grommet-icons';
 import { getLogradouroTypeList } from './loteCPFormActions'
 
-import {URLlogradouros} from "../../common/consts"
 
 class LoteCPForm extends Component{
 
@@ -43,7 +41,7 @@ class LoteCPForm extends Component{
     
     handleSubmit (){        
 
-        if(this.state.valueZonaFiscal =='' || this.state.valueNumQuadra == '' || this.state.valueNumLote ==''){
+        if(this.state.valueZonaFiscal ==='' || this.state.valueNumQuadra === '' || this.state.valueNumLote ===''){
             return null
         }
 

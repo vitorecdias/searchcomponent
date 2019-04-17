@@ -56,7 +56,7 @@ class CEPForm extends Component{
         return(               
             <Form>
                 <Box direction="row" align="center" alignContent="center" alignSelf="center">                             
-                    <Box pad="small" width="300px" align="center">
+                    <Box pad="small" width="200px" align="center">
                         <MaskedInput size="xsmall"
                             mask={[
                                 {
