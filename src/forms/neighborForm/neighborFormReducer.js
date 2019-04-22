@@ -5,8 +5,9 @@ export default (state = INITIAL_STATE,action) =>{
         case "BAIRROS_LIST_FETCHED":{
             const list = []
 
-            for(var i in action.payload.data){
-                list.push(action.payload.data[i].properties.NOME)
+            console.log(action.payload.data.features)
+            for(var i in action.payload.data.features){
+                list.push(action.payload.data.features[i].properties.NOME)
             }
             return {...state, bairrosList: list.sort()}
         }

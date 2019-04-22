@@ -13,13 +13,17 @@ class NeighborForm extends Component{
         super(props)
 
         this.state ={
-            valueBairro: ''
+            valueBairro: '',
+            options:[],
+            defaultOptions:[]
         }
 
         this.onSelectBairro = this.onSelectBairro.bind(this)
     }
     componentWillMount(){
         this.props.getBairrosList()  
+        
+        this.setState({ options:this.props.bairrosList, defaultOptions:this.props.bairrosList })
     }    
   
     handleSubmit (){        
@@ -59,8 +63,23 @@ class NeighborForm extends Component{
         return(               
             <Form > 
                 <Box direction="row" align="center" alignContent="center" alignSelf="center">                             
-                    <Box pad="small" width="250px" align="center">
-                        <FormField component={NewSelect} options={this.props.bairrosList} onChange={this.onSelectBairro} value={this.state.valueBairro} size='xsmall'/> 
+                    <Box pad="small" width="400px" align="center">
+                        <FormField component={NewSelect} 
+                            placeholder="Digite o nome do bairro..." 
+                            options={ this.state.options} 
+                            onChange={({ option }) => this.setState({ valueBairro: option })}
+                            value={this.state.valueBairro} 
+                            size='xsmall'
+                            icon={false}    
+                            onClose={() =>  this.setState({options: this.state.defaultOptions })}          
+                            onSearch={text => {
+                                const exp = new RegExp(text, "i");    
+                                console.log('aqui')                            
+                                this.setState({options: this.state.defaultOptions.filter(o => exp.test(o))})
+                                
+                              }
+                            }
+                            /> 
                     </Box>
                     <Box pad="small" width="60px">
                         <Button type="submit" size="small" primary icon={<Search size='small'/>} onClick={this.handleSubmit} onKeyPress={e => {

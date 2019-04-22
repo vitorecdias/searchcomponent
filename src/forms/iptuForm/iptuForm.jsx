@@ -18,18 +18,19 @@ class IptuForm extends Component{
     }
 
     handleSubmit (){        
-        const iptu = this.state.valueIPTU.replace(/./g, "")
-        console.log(iptu)
+        const iptu = this.state.valueIPTU.replace(".", "").replace(".", "").replace(".", "").replace("-", "")
+
         if(iptu.length < 15){
             return null
         }
-
+            
        axios.get('http://bhmap-hm.pbh.gov.br/v2/api/wfs?version=2.0.0&request=GetFeature&typeName=pbh_sirgas%3AS2000_LOTE_CTM&outputFormat=application%2Fjson&CQL_FILTER=INDICE_CADASTRAL%3D%27'
-                +iptu+"%27")
+                +iptu.toUpperCase()+"%27")
                 .then(resp=>{
-                    if(resp.data.endereco.length > 0){   
+                    if(resp.data.features.length > 0){   
       
-                        console.log(resp.data.endereco)    
+                        console.log("Encontrado: ")    
+                        console.log(resp.data.features)  
                         
                     }else{
                         console.log('Nenhum endereço encontrado!')   
@@ -68,7 +69,7 @@ class IptuForm extends Component{
                                 },
                                 {
                                     length: 1,
-                                    regexp: /[a-z-A-Z]$/,
+                                    regexp: /[' ']$/,
                                     placeholder: '_',
                                 },
                                 { fixed: '.' },
@@ -91,7 +92,7 @@ class IptuForm extends Component{
                                 { fixed: '-' },
                                 {
                                     length: 1,
-                                    regexp: /[0-9]$/,
+                                    regexp: /[0-9-a-z-A-Z]$/,
                                     placeholder: '_',
                                 }                                
                             ]}
