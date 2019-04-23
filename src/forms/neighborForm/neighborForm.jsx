@@ -1,5 +1,6 @@
 import React, { Component} from 'react'
 import NewSelect from '../../common/template/select'
+import axios from 'axios'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -14,53 +15,44 @@ class NeighborForm extends Component{
 
         this.state ={
             valueBairro: '',
-            options:[],
-            defaultOptions:[]
+            options:[]
         }
 
-        this.onSelectBairro = this.onSelectBairro.bind(this)
     }
+
     componentWillMount(){
-        this.props.getBairrosList()  
-        
-        this.setState({ options:this.props.bairrosList, defaultOptions:this.props.bairrosList })
+        this.props.getBairrosList()          
+        this.setState({ options: this.props.bairrosList})  
     }    
   
-    handleSubmit (){        
+    handleSubmit (bairro){        
 
-        /*if(this.state.valueLogradouro <= 0){
+        if(bairro===""){
+            console.log("aqui")
             return null
         }
 
-       axios.get(`${URLlogradouros}/?`
-                +(this.state.valueType?'tipo='+this.state.valueType+'&':'')
-                +(this.state.valueLogradouro?'nome='+this.state.valueLogradouro+'&':'')
-                +(this.state.valueNumber?'numero='+this.state.valueNumber:''))
+       axios.get("http://bhmap.pbh.gov.br/v2/api/wfs?version=2.0.0&request=GetFeature&typeName=ide_bhgeo_geopackage%3ABAIRRO&outputFormat=application%2Fjson&CQL_FILTER=NOME%3D%27"+bairro+"%27")
                 .then(resp=>{
                     
-                    if(resp.data.length > 0){
+                    if(resp.data.features.length > 0){
                         console.log('Endereços encontrados! ')      
-                        for(var end in resp.data) {         
-                            console.log(resp.data[end])    
-                        }   
+                        console.log(resp.data.features)    
+                     
                     }else{
-                        console.log('Nenhum endereços encontrado!')   
+                        console.log('Nenhum bairro encontrado!')   
                     }   
                     })
                 .catch(e=>{
                     console.log('Erro', e)
-                })*/
+                })
 
     }
 
-    onSelectBairro(event){
-
-        this.setState({valueBairro: event.value})
-    }
-
-    render(){        
-
-        return(               
+    render(){                         
+        
+        return(      
+                     
             <Form > 
                 <Box direction="row" align="center" alignContent="center" alignSelf="center">                             
                     <Box pad="small" width="400px" align="center">
@@ -71,18 +63,17 @@ class NeighborForm extends Component{
                             value={this.state.valueBairro} 
                             size='xsmall'
                             icon={false}    
-                            onClose={() =>  this.setState({options: this.state.defaultOptions })}          
+                            onClose={() =>  this.setState({options: this.props.bairrosList })}          
                             onSearch={text => {
                                 const exp = new RegExp(text, "i");    
-                                console.log('aqui')                            
-                                this.setState({options: this.state.defaultOptions.filter(o => exp.test(o))})
-                                
+                          
+                                this.setState({options: this.props.bairrosList.filter(o => exp.test(o))})                                
                               }
                             }
                             /> 
                     </Box>
                     <Box pad="small" width="60px">
-                        <Button type="submit" size="small" primary icon={<Search size='small'/>} onClick={this.handleSubmit} onKeyPress={e => {
+                        <Button type="submit" size="small" primary icon={<Search size='small'/>} onClick={() =>this.handleSubmit(this.state.valueBairro)} onKeyPress={e => {
                             if(e.keyCode === 13 && e.shiftKey === false) {
                                 this.handleSubmit()  
                             }}}/>
