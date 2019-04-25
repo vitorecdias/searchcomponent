@@ -30,8 +30,7 @@ class AdressForm extends Component{
         this.onSelectType = this.onSelectType.bind(this)
         this.onChangeNumber = this.onChangeNumber.bind(this)
     }
-
-
+    
     componentWillMount(){
         this.props.getLogradouroTypeList()  
     }    
@@ -63,7 +62,7 @@ class AdressForm extends Component{
     }
 
     onSelectSuggestion(event){
-        console.log(event.suggestion)
+        
         this.setState({
             valueLogradouro: event.suggestion
         })
@@ -111,18 +110,18 @@ class AdressForm extends Component{
 
         return(               
             <Form > 
-                <Box direction="row" align="center" alignContent="center" alignSelf="center">                             
-                    <Box pad="small" width="180px">
-                        <FormField name="tipo" component={NewSelect} options={this.props.logradouroTypeList} onChange={this.onSelectType} value={this.state.valueType} size="xsmall"/> 
+                <Box direction="row" align="center" alignContent="center" alignSelf="center" pad='xsmall'>                             
+                    <Box pad="xsmall" width="170px">
+                        <FormField component={NewSelect} options={this.props.logradouroTypeList} onChange={this.onSelectType} value={this.state.valueType} size="xsmall"/> 
                     </Box>
-                    <Box pad="small">
-                        <FormField name="nome" value={this.state.valueLogradouro} suggestions = {this.state.logSuggestionsList}
+                    <Box pad="xsmall">
+                        <FormField value={this.state.valueLogradouro} suggestions = {this.state.logSuggestionsList}
                                 onChange={this.handleChangeLogField} onSelect={this.onSelectSuggestion} placeholder="logradouro" size="xsmall"  maxLength={30}/>                                                    
                     </Box>
-                    <Box pad="small" width="100px">
-                        <FormField name="numero" size="xsmall"placeholder="Nº" type="number" onChange={this.onChangeNumber} value={this.state.valueNumber} maxLength={5}/>                            
+                    <Box pad="xsmall" width="100px">
+                        <FormField size="xsmall"placeholder="Nº" type="number" onChange={this.onChangeNumber} value={this.state.valueNumber} maxLength={5}/>                            
                     </Box>
-                    <Box pad="small" width="60px">
+                    <Box pad="xsmall" width="50px">
                         <Button type="submit" size="small" primary icon={<Search size='small'/>} onClick={this.handleSubmit} onKeyPress={e => {
                             if(e.keyCode === 13 && e.shiftKey === false) {
                                 this.handleSubmit()  

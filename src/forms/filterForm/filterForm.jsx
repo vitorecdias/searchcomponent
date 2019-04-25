@@ -6,10 +6,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Form, FormField, Button, Box } from 'grommet'
 import NewSelect from '../../common/template/select'
+import If from '../../common/operator/if'
 import { Search } from 'grommet-icons';
 import { getCamadasList } from './filterFormActions'
-
-import {URLlogradouros} from "../../common/consts"
 
 class FilterForm extends Component{
 
@@ -19,145 +18,171 @@ class FilterForm extends Component{
         this.state ={
             valueCamada: '',
             valueAtributo:'',
-            valueOperador:'',
+            valueOperador:'== (Igual)',
             valueValor:'',
-            filterForm:[],
-            logTypeList:[]
-        }
+            valueValor1:'',
+            valueValor2:'',
+            atributosList:[],
+            operadorList:['== (Igual)','!= (Diferente)','< (Menor)','> (Maior)','<= (Menor ou Igual)','>= (Maior ou Igual)','.. (Entre)','~ (Similar)'],
+            operadores:{'== (Igual)': '=','!= (Diferente)':'<>','< (Menor)':'<','> (Maior)':'>','<= (Menor ou Igual)':'<=','>= (Maior ou Igual)':'>=',
+                '.. (Entre)':'BETWEEN','~ (Similar)':'~'},
+            camadasLabelsList:[],
+            camada: [],
+            exibeValor:true,
+            atributoDisabled: true,
+            valueValorSuggestions: [],
+            valueValorOptionsFixo: []
+         }
 
         this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleChangeLogField = this.handleChangeLogField.bind(this)
-        this.onSelectSuggestion = this.onSelectSuggestion.bind(this)
 
-        this.onSelectCamada = this.onSelectCamada.bind(this)
-        this.onSelectAtributo = this.onSelectAtributo.bind(this)
-        this.onSelectOperador = this.onSelectOperador.bind(this)
-        this.onSelectValor = this.onSelectValor.bind(this)
-
-        this.onChangeCamada = this.onChangeCamada.bind(this)
-        this.onChangeAtributo = this.onChangeAtributo.bind(this)
-        this.onChangeOperador = this.onChangeOperador.bind(this)
-        this.onChangeValor = this.onChangeValor.bind(this)
     }
-
-
     componentWillMount(){
         this.props.getCamadasList()  
+        var list =[]
+        console.log(this.props.camadasList)
+        this.props.camadasList.map(x => !x.privado?list.push(x.display_name):null)
+        this.setState({camadasLabelsList:list})
     }    
 
-    handleChangeLogField(event){
-        this.setState({valueLogradouro: event.target.value})       
-
-        if(event.target.value.length >= 3){
-            axios.get(URLlogradouros+"?filtrado=true&tipo="+this.state.valueType+"&nome="+event.target.value)
-            .then(resp=>{
-                var list = []
-                if(resp.data.length > 0){       
-                    for(var log in resp.data) {         
-                        list.push(resp.data[log]["nomelogradouro"])    
-                    } 
-                    this.setState({logSuggestionsList: list})  
-                } else{
-                    this.setState({logSuggestionsList: []}) 
-                }
-                })
-                .catch(e=>{
-                    console.log('Erro', e)
-                })
-        }else{
-            this.setState({logSuggestionsList: []}) 
-        }
-
-        event.preventDefault();
-    }
-
-    onSelectSuggestion(event){
-        console.log(event.suggestion)
-        this.setState({
-            valueLogradouro: event.suggestion
-        })
-    }
-    
     handleSubmit (){        
 
-        if(this.state.valueLogradouro <= 0){
+        if(this.state.valueAtributo === '' || this.state.valueValor === '' || this.state.valueCamada === '' || this.state.valueOperador ==='' &&(this.state.valueValor1 === '' || this.state.valueValor2 === '')){
             return null
         }
 
-       axios.get(`${URLlogradouros}/?`
-                +(this.state.valueType?'tipo='+this.state.valueType+'&':'')
-                +(this.state.valueLogradouro?'nome='+this.state.valueLogradouro+'&':'')
-                +(this.state.valueNumber?'numero='+this.state.valueNumber:''))
-                .then(resp=>{
-                    
-                    if(resp.data.length > 0){
-                        console.log('Endereços encontrados! ')   
-                        console.log(resp.data)    
-     
-                    }else{
-                        console.log('Nenhum endereços encontrado!')   
-                    }   
-                    })
-                .catch(e=>{
-                    console.log('Erro', e)
-                })
-
-    }
-
-    onSelectCamada(event){
-
-        this.setState({valueCamada: event.value})
-
-    }
-
-    onSelectAtributo(event){
-
-        this.setState({valueAtributo: event.value})
-
-    }
-
-    onSelectOperador(event){
-
-        this.setState({valueOperador: event.value})
-    }
-
-    onSelectValor(event){
-
-        this.setState({valueValor: event.value})
-    }
-
-    onChangeCamada(event){
-
-        this.setState({valueCamada: event.target.value})
-    }
-
-    onChangeAtributo(event){
-
-        this.setState({valueAtributo: event.target.value})
-    }
-
-    onChangeOperador(event){
-
-        this.setState({valueOperador: event.target.value})
-    }
-
-    onChangeValor(event){
-
-        this.setState({valueValor: event.target.value})
+       axios.get('http://bhmap.pbh.gov.br/v2/api/wfs?version=2.0.0&request=GetFeature&typeName=ide_bhgeo:'+this.state.camada.servicos.wfs.typename+
+            '&outputFormat=application/json&CQL_FILTER='+this.state.camada.servicos.wfs.attributes[this.state.valueAtributo]+'%20'+
+            (
+                this.state.valueOperador==='.. (Entre)'?
+                ('BETWEEN%20%27'+this.state.valueValor1+'%27%20AND%20%27'+this.state.valueValor1+'%27'):
+                (this.state.operadores[this.state.valueOperador]+'%20%27'+this.state.valueValor+'%27')
+            )
+            
+        ).then(resp=>{                    
+            if(resp.data){
+                console.log('Endereços encontrados! ')   
+                console.log(resp.data)    
+            }else{
+                console.log('Nenhum endereços encontrado!')   
+            }   
+            })
+        .catch(e=>{
+            console.log('Erro', e)
+        })
     }
 
     render(){        
 
         return(               
-            <Form > 
-                <Box direction='column'>
+  
+                <Box direction='column' pad='xsmall'>
+                <Form>
                     <Box direction="row" align="center" alignContent="center" alignSelf="center" gap='small'>                   
-                        <FormField label = "Camada:" name="tipo" component={NewSelect} options={this.props.camadasList} onChange={this.onSelectType} value={this.state.valueCamada} size="xsmall"/> 
-                        <FormField label = "Atributo:" name="tipo" component={NewSelect} options={this.props.camadasList} onChange={this.onSelectType} value={this.state.valueAtributo} size="xsmall"/> 
+                        <FormField 
+                            component={NewSelect} 
+                            options={this.state.camadasLabelsList} 
+                            onChange={option => {
+                                this.setState({
+                                    camada:this.props.camadasList[option.selected],
+                                    valueCamada: option.value,                                
+                                    atributosList:this.props.camadasList[option.selected].servicos.display_feature.attributes,
+                                    valueAtributo:"",
+                                    atributoDisabled:false,
+                                    valueValorSuggestions: [],
+                                    valueValorOptionsFixo:[]
+                                })
+                                
+                                console.log(this.state.camada)
+                            }} 
+                            value={this.state.valueCamada} 
+                            placeholder="Camada" 
+                            size="xsmall"
+                            emptySearchMessage='Caregando...'/> 
+                        <FormField 
+                            disabled = {this.state.atributoDisabled}
+                            component={NewSelect} 
+                            options={this.state.atributosList} 
+                            onChange={option => {
+                                this.setState({valueAtributo: option.value,
+                                    valueValorSuggestions: []})
+                                
+                                axios.get('http://bhmapogcbase.pbh.gov.br/bhmapogcbase/wfs/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ide_bhgeo:'+
+                                    this.state.camada.servicos.wfs.typename+'&outputFormat=application%2Fjson')
+                                    .then(resp=>{                    
+                                        if(resp.data){
+                                            console.log('Camada Buscada! ')   
+                                            console.log(resp.data)
+
+                                            var list =[]
+                                            resp.data.features.map(x => list.push(x.properties[this.state.camada.servicos.wfs.attributes[this.state.valueAtributo]]))
+                                            const opts =  [...new Set(list)]
+                                            this.setState({valueValorOptionsFixo: opts})
+                                        }else{
+                                            console.log('Nenhum endereços encontrado!')   
+                                        }   
+                                        })
+                                    .catch(e=>{
+                                        console.log('Erro', e)
+                                })
+                            
+                            } }
+                            value={this.state.valueAtributo} 
+                            placeholder="Atributo" 
+                            size="xsmall"
+                            emptySearchMessage='Nenhum atributo encontrado'
+                            /> 
                     </Box>  
                     <Box direction="row" align="center" alignContent="center" alignSelf="center" gap='small'>                    
-                        <FormField label = "Operador:" name="tipo" component={NewSelect} options={this.props.camadasList} onChange={this.onSelectType} value={this.state.valueOperador} size="xsmall"/> 
-                        <FormField label = "Valor:" name="tipo" onChange={this.onSelectType} value={this.state.valueValor} size="xsmall"/> 
+                        <FormField placeholder = "Operador" 
+                            component={NewSelect} 
+                            options={this.state.operadorList} 
+                            onChange={option => {
+                                this.setState({valueOperador: option.value})                       
+                                if(option.value === ".. (Entre)"){
+                                    this.setState({
+                                        exibeValor:false,
+                                        valueValor:'',
+                                        valueValor1:'',
+                                        valueValor2:''})
+                                }else{
+                                    this.setState({
+                                        exibeValor:true
+                                     })
+                                }
+                            }} 
+                            value={this.state.valueOperador} 
+                            size="xsmall"
+
+                            /> 
+                        <If test={this.state.exibeValor}>
+                            <FormField placeholder = "Valor" 
+                                value={this.state.valueValor} 
+                                size="xsmall"
+                                suggestions = {this.state.valueValorSuggestions}
+                                onChange={event => {
+                                    const exp = new RegExp(event.target.value, "i");    
+                              
+                                    this.setState({valueValor: event.target.value,
+                                        valueValorSuggestions: this.state.valueValorOptionsFixo.filter(o => exp.test(o))
+                                        })                                
+                                }}
+                                onClose={() =>  this.setState({valueValorSuggestions: this.state.valueValorOptionsFixo })}
+                                onSelect= {event =>  this.setState({valueValor: event.suggestion })}
+                                /> 
+                        </If>
+                        <If test={!this.state.exibeValor}>
+                            <Box direction="column">
+                                <FormField placeholder = "Valor 1" 
+                                    onChange={event => this.setState({valueValor1: event.target.value})} 
+                                    value={this.state.valueValor1} 
+                                    size="xsmall"/>
+                                <FormField placeholder = "Valor 2" 
+                                    onChange={event => this.setState({valueValor2: event.target.value})} 
+                                    value={this.state.valueValor2} 
+                                    size="xsmall"/>
+                            </Box>
+                        </If>
 
                         <Button type="submit" size="small" primary icon={<Search size='small'/>} onClick={this.handleSubmit} onKeyPress={e => {
                             if(e.keyCode === 13 && e.shiftKey === false) {
@@ -165,8 +190,9 @@ class FilterForm extends Component{
                             }}}/>
                         
                     </Box>  
+                    </Form>
                 </Box>
-            </Form>              
+            
             
         )
     }

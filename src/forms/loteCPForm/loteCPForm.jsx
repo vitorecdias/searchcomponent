@@ -4,10 +4,8 @@ import axios from 'axios'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Form, FormField, Button, Box } from 'grommet'
+import { Form, FormField, Button, Box,MaskedInput } from 'grommet'
 import { Search } from 'grommet-icons';
-import { getLogradouroTypeList } from './loteCPFormActions'
-
 
 class LoteCPForm extends Component{
 
@@ -52,19 +50,57 @@ class LoteCPForm extends Component{
 
         return(               
             <Form > 
-                <Box direction="row" align="stretch" alignContent="stretch" alignSelf="stretch">                             
-                    <Box pad="small" width="150px">
-                        <FormField value={this.state.valueZonaFiscal} onChange={event => this.setState({valueZonaFiscal: event.target.value})} 
-                            placeholder="Nº Zona Fiscal" size="xsmall"  max={99999} type="number" />                                                    
+                <Box direction="row" align="stretch" alignContent="stretch" alignSelf="stretch" pad='xsmall'>                             
+                    <Box pad="xsmall" width="150px">
+                        <MaskedInput size="xsmall"
+                            mask={[
+                                {
+                                length: 3,
+                                regexp: /[0-9]$/,
+                                placeholder: '',
+                                }
+                            ]}
+                            placeholder="Nº Zona Fiscal" 
+                            value={this.state.valueZonaFiscal}
+                            onChange={event => this.setState({valueZonaFiscal: event.target.value})}
+                            />                                                   
                     </Box>
-                    <Box pad="small" width="150px">
-                        <FormField value={this.state.valueNumQuadra}
-                                onChange={event => this.setState({valueNumQuadra: event.target.value})} placeholder="Nº Quadra" size="xsmall"  max={99999} type="number"/>                                                    
+                    <Box pad="xsmall" width="150px"> 
+                        <MaskedInput size="xsmall"
+                            mask={[
+                                {
+                                length: 3,
+                                regexp: /[0-9-a-z-A-Z]$/,
+                                placeholder: '',
+                                }
+                            ]}
+                            placeholder="Nº Quadra"
+                            value={this.state.valueNumQuadra}
+                            onChange={event => this.setState({valueNumQuadra: event.target.value})}
+                            />                                                    
                     </Box>
-                    <Box pad="small" width="150px">
-                        <FormField  size="xsmall"placeholder="Nº Lote" onChange={event => this.setState({valueNumLote: event.target.value})} value={this.state.valueNumLote} max={99999}/>                            
+                    <Box pad="xsmall" width="150px">
+                        
+                        <MaskedInput size="xsmall"
+                            mask={[
+                                {
+                                length: 3,
+                                regexp: /[0-9-a-z-A-Z]$/,
+                                placeholder: '',
+                                },
+                                {
+                                length: 1,
+                                regexp: /[a-z-A-Z]$/,
+                                placeholder: '',
+                                }
+                            ]}
+                            placeholder="Nº Lote"
+                            value={this.state.valueNumLote}
+                            onChange={event => this.setState({valueNumLote: event.target.value})}
+                            />                            
                     </Box>
-                    <Box pad="small" width="60px">
+                    
+                    <Box pad="xsmall" width="50px">
                         <Button type="submit" size="small" primary icon={<Search size='small'/>} onClick={this.handleSubmit} onKeyPress={e => {
                             if(e.keyCode === 13 && e.shiftKey === false) {
                                 this.handleSubmit()  

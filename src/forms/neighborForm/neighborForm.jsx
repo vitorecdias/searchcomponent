@@ -54,8 +54,8 @@ class NeighborForm extends Component{
         return(      
                      
             <Form > 
-                <Box direction="row" align="center" alignContent="center" alignSelf="center">                             
-                    <Box pad="small" width="400px" align="center">
+                <Box direction="row" pad='xsmall'>                             
+                    <Box pad="xsmall" width="400px" align="center">
                         <FormField component={NewSelect} 
                             placeholder="Digite o nome do bairro..." 
                             options={ this.state.options} 
@@ -72,7 +72,7 @@ class NeighborForm extends Component{
                             }
                             /> 
                     </Box>
-                    <Box pad="small" width="60px">
+                    <Box pad="xsmall" width="50px">
                         <Button type="submit" size="small" primary icon={<Search size='small'/>} onClick={() =>this.handleSubmit(this.state.valueBairro)} onKeyPress={e => {
                             if(e.keyCode === 13 && e.shiftKey === false) {
                                 this.handleSubmit()  

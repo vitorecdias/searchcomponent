@@ -6,6 +6,8 @@ import {
    Tabs,
    Tab
   } from 'grommet';
+import {Drag} from 'grommet-icons'
+import Draggable from 'react-draggable'
 
 import { deepFreeze } from "grommet/utils"
 import NeighborForm from './forms/neighborForm/neighborForm';
@@ -55,35 +57,47 @@ const theme = deepFreeze(
 
 class App extends Component {
 
+  constructor(props){
+    super(props)
+    this.state= {
+      activeDrags: 0
+    }
+  }
+
   render() {    
     
-    return (
-   
-        <Grommet theme={theme}>            
-           <Box background="light-1" pad="medium" round="small" height="250px" width="600px" alignSelf="center" align="center" alignContent="stretch"> 
-            <Tabs plain={false} alignContent="stretch" align="center">
-                <Tab title="Endereço" >
-                    <AdressForm />
-                </Tab>
-                <Tab title="Bairro">
-                    <NeighborForm />
-                </Tab>
-                <Tab title="CEP">
-                    <CEPForm />
-                </Tab>
-                <Tab title="IPTU">
-                    <IptuForm />
-                </Tab>
-                <Tab title="Lote CP">
-                    <LoteCPForm />
-                </Tab>
-                <Tab title="Filtro">
-                    <FilterForm />
-                </Tab>
-            </Tabs>  
-            </Box>  
-        </Grommet>         
+    return (      
       
+          <Grommet theme={theme}> 
+          <Draggable handle="strong" >
+          <div className="box no-cursor">         
+            <Box background="light-1" pad="xsmall" round="medium" width="600px" alignSelf="start" align="center" alignContent="stretch" direction='row'> 
+              <Tabs plain={false} alignContent="stretch" align="center" width="580px">
+                  <Tab title="Endereço" >
+                      <AdressForm />
+                  </Tab>
+                  <Tab title="Bairro">
+                      <NeighborForm />
+                  </Tab>
+                  <Tab title="CEP">
+                      <CEPForm />
+                  </Tab>
+                  <Tab title="IPTU">
+                      <IptuForm />
+                  </Tab>
+                  <Tab title="Lote CP">
+                      <LoteCPForm />
+                  </Tab>
+                  <Tab title="Filtro">
+                      <FilterForm />
+                  </Tab>
+              </Tabs>  
+              <strong className="cursor"><Drag/></strong>
+              </Box>  
+              </div>
+              </Draggable>
+          </Grommet>         
+        
     );
   }
 }

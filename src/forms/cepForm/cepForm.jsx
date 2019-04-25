@@ -55,8 +55,8 @@ class CEPForm extends Component{
 
         return(               
             <Form>
-                <Box direction="row" align="center" alignContent="center" alignSelf="center">                             
-                    <Box pad="small" width="200px" align="center">
+                <Box direction="row" pad='xsmall'>                             
+                    <Box pad="xsmall" width="200px" align="center">
                         <MaskedInput size="xsmall"
                             mask={[
                                 {
@@ -82,7 +82,7 @@ class CEPForm extends Component{
                             onChange={this.onChangeCEP}
                             />                                                  
                     </Box>
-                    <Box pad="small" width="60px">
+                    <Box pad="xsmall" width="50px">
                       <Button type="submit" size="small" primary icon={<Search size='small'/>} onClick={this.handleSubmit} onKeyPress={e => {
                             if(e.keyCode === 13 && e.shiftKey === false) {
                                 this.handleSubmit()  
